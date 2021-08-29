@@ -51,8 +51,6 @@ class _KanbanListWidgetState extends State<KanbanListWidget>
 
   Size itemSize = Size.zero;
 
-  KanbanItem? _hoveredDraggable;
-
   @override
   Widget build(BuildContext context) {
     final listWidth =
@@ -90,19 +88,7 @@ class _KanbanListWidgetState extends State<KanbanListWidget>
                               child: Stack(
                                 children: [
                                   Column(
-                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      AnimatedSize(
-                                        vsync: this,
-                                        duration: Duration(milliseconds: 300),
-                                        alignment: Alignment.topLeft,
-                                        child: Opacity(
-                                          opacity: 0.5,
-                                          child: _hoveredDraggable != null
-                                              ? _hoveredDraggable!.child
-                                              : Container(),
-                                        ),
-                                      ),
                                       Draggable<KanbanItem>(
                                         data: item,
                                         feedback: Transform.rotate(
@@ -116,55 +102,46 @@ class _KanbanListWidgetState extends State<KanbanListWidget>
                                         childWhenDragging: Container(),
                                         child: item.child,
                                       ),
+                                      // AnimatedSize(
+                                      //   duration: Duration(milliseconds: 300),
+                                      //   vsync: this,
+                                      //   child: Container(
+                                      //     height: itemSize.height,
+                                      //   ),
+                                      // )
                                     ],
                                   ),
-                                  Positioned.fill(
-                                    child: DragTarget<KanbanItem>(
-                                      onWillAccept: (data) {
-                                        if (data != null &&
-                                            list.children.indexOf(data) !=
-                                                index) {
-                                          if (mounted)
-                                            setState(() {
-                                              _hoveredDraggable = data;
-                                            });
-                                          return true;
-                                        }
+                                  DragTarget<KanbanItem>(
+                                    onWillAccept: (data) {
+                                      // if (data != null &&
+                                      //     list.children.indexOf(data) !=
+                                      //         index) {
+                                      //   // print(true);
+                                      //   return true;
+                                      // }
 
-                                        return false;
-                                      },
-                                      onLeave: (data) {
-                                        if (mounted)
-                                          setState(() {
-                                            _hoveredDraggable = null;
-                                          });
-                                      },
-                                      onAccept: (data) {
-                                        setState(() {
-                                          final newListIndex =
-                                              widget.kanbanLists.indexOf(list);
-                                          final oldListIndex =
-                                              widget.kanbanLists.indexWhere(
-                                                  (element) => element.children
-                                                      .any((element) =>
-                                                          element == data));
-                                          final newIndex = index;
-                                          final oldIndex = widget
-                                              .kanbanLists[oldListIndex]
-                                              .children
-                                              .indexOf(data);
+                                      return true;
+                                    },
+                                    onAccept: (data) {
+                                      final newListIndex =
+                                          widget.kanbanLists.indexOf(list);
+                                      final oldListIndex = widget.kanbanLists
+                                          .indexWhere((element) =>
+                                              element.children.any((element) =>
+                                                  element == data));
+                                      final newIndex = index;
+                                      final oldIndex = widget
+                                          .kanbanLists[oldListIndex].children
+                                          .indexOf(data);
 
-                                          widget.onItemReorder(oldListIndex,
-                                              newListIndex, oldIndex, newIndex);
-                                          _hoveredDraggable = null;
-                                        });
-                                      },
-                                      builder: (context, candidateData,
-                                          rejectedData) {
-                                        if (candidateData.isNotEmpty) {}
-                                        return Container();
-                                      },
-                                    ),
+                                      widget.onItemReorder(oldListIndex,
+                                          newListIndex, oldIndex, newIndex);
+                                    },
+                                    builder:
+                                        (context, candidateData, rejectedData) {
+                                      if (candidateData.isNotEmpty) {}
+                                      return Container();
+                                    },
                                   )
                                 ],
                               ),
