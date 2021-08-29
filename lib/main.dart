@@ -29,8 +29,116 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late List<KanbanList> kanbanList;
+
+  @override
+  void initState() {
+    kanbanList = [
+      KanbanList(
+        children: [
+          KanbanItem(
+            child: SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Item 1'),
+                ),
+              ),
+            ),
+          ),
+          KanbanItem(
+            child: SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Item 2'),
+                ),
+              ),
+            ),
+          ),
+          KanbanItem(
+            child: SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Item 3'),
+                ),
+              ),
+            ),
+          ),
+        ],
+        header: buildHeader('Title 1'),
+      ),
+      KanbanList(
+        children: [
+          KanbanItem(
+            child: SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Item 1'),
+                ),
+              ),
+            ),
+          ),
+        ],
+        header: buildHeader('Title 2'),
+      ),
+      KanbanList(
+        children: [
+          KanbanItem(
+            child: SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Item 1'),
+                ),
+              ),
+            ),
+          ),
+        ],
+        header: buildHeader('Title 3'),
+      ),
+    ];
+    super.initState();
+  }
+
+  Container buildHeader(String title) {
+    return Container(
+      height: 60,
+      width: double.infinity,
+      child: Card(
+        color: Colors.greenAccent,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(title),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return KanbanListWidget();
+    return Scaffold(
+      backgroundColor: Colors.grey,
+      appBar: AppBar(),
+      body: KanbanListWidget(
+        listColor: Colors.blueGrey,
+        kanbanLists: kanbanList,
+        listBorderRadius: BorderRadius.circular(8),
+        onItemReorder:
+            (oldListIndex, newListIndex, oldItemIndex, newItemIndex) {},
+      ),
+    );
   }
 }
