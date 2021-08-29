@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // return DragHandleExample();
+    // return Kanban();
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(),
@@ -138,7 +138,13 @@ class _MyHomePageState extends State<MyHomePage> {
         kanbanLists: kanbanList,
         listBorderRadius: BorderRadius.circular(8),
         onItemReorder:
-            (oldListIndex, newListIndex, oldItemIndex, newItemIndex) {},
+            (oldListIndex, newListIndex, oldItemIndex, newItemIndex) {
+          setState(() {
+            final oldItem =
+                kanbanList[oldListIndex].children.removeAt(oldItemIndex);
+            kanbanList[newListIndex].children.insert(newItemIndex, oldItem);
+          });
+        },
       ),
     );
   }

@@ -42,8 +42,7 @@ class KanbanListWidget extends StatefulWidget {
   _KanbanListWidgetState createState() => _KanbanListWidgetState();
 }
 
-class _KanbanListWidgetState extends State<KanbanListWidget>
-    with TickerProviderStateMixin {
+class _KanbanListWidgetState extends State<KanbanListWidget> {
   @override
   void initState() {
     super.initState();
@@ -87,62 +86,54 @@ class _KanbanListWidgetState extends State<KanbanListWidget>
                               },
                               child: Stack(
                                 children: [
-                                  Column(
-                                    children: [
-                                      Draggable<KanbanItem>(
-                                        data: item,
-                                        feedback: Transform.rotate(
-                                          angle: -0.1,
-                                          child: SizedBox(
-                                            width: listWidth,
-                                            height: itemSize.height,
-                                            child: item.child,
-                                          ),
-                                        ),
-                                        childWhenDragging: Container(),
+                                  Draggable<KanbanItem>(
+                                    data: item,
+                                    feedback: Transform.rotate(
+                                      angle: -0.1,
+                                      child: SizedBox(
+                                        width: listWidth,
+                                        height: itemSize.height,
                                         child: item.child,
                                       ),
-                                      // AnimatedSize(
-                                      //   duration: Duration(milliseconds: 300),
-                                      //   vsync: this,
-                                      //   child: Container(
-                                      //     height: itemSize.height,
-                                      //   ),
-                                      // )
-                                    ],
+                                    ),
+                                    childWhenDragging: SizedBox(
+                                      height: itemSize.height,
+                                      child: Opacity(
+                                        opacity: 0.5,
+                                        child: item.child,
+                                      ),
+                                    ),
+                                    child: item.child,
                                   ),
-                                  DragTarget<KanbanItem>(
-                                    onWillAccept: (data) {
-                                      // if (data != null &&
-                                      //     list.children.indexOf(data) !=
-                                      //         index) {
-                                      //   // print(true);
-                                      //   return true;
-                                      // }
-
+                                  DragTarget<KanbanItem>(onWillAccept: (data) {
+                                    if (data != null &&
+                                        list.children.indexOf(data) != index) {
+                                      // print(true);
                                       return true;
-                                    },
-                                    onAccept: (data) {
-                                      final newListIndex =
-                                          widget.kanbanLists.indexOf(list);
-                                      final oldListIndex = widget.kanbanLists
-                                          .indexWhere((element) =>
-                                              element.children.any((element) =>
-                                                  element == data));
-                                      final newIndex = index;
-                                      final oldIndex = widget
-                                          .kanbanLists[oldListIndex].children
-                                          .indexOf(data);
+                                    }
 
-                                      widget.onItemReorder(oldListIndex,
-                                          newListIndex, oldIndex, newIndex);
-                                    },
-                                    builder:
-                                        (context, candidateData, rejectedData) {
-                                      if (candidateData.isNotEmpty) {}
-                                      return Container();
-                                    },
-                                  )
+                                    return false;
+                                  }, onAccept: (data) {
+                                    final newListIndex =
+                                        widget.kanbanLists.indexOf(list);
+                                    final oldListIndex = widget.kanbanLists
+                                        .indexWhere((element) => element
+                                            .children
+                                            .any((element) => element == data));
+                                    final newIndex = index;
+                                    final oldIndex = widget
+                                        .kanbanLists[oldListIndex].children
+                                        .indexOf(data);
+
+                                    widget.onItemReorder(oldListIndex,
+                                        newListIndex, oldIndex, newIndex);
+                                  }, builder:
+                                      (context, candidateData, rejectedData) {
+                                    return Container(
+                                      height: itemSize.height,
+                                      width: double.infinity,
+                                    );
+                                  })
                                 ],
                               ),
                             );
